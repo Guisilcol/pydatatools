@@ -6,20 +6,29 @@ import sys
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 """Just to make sure the package is importable"""
 
-from pydatatools.datatools import DataTools
+from pydatatools import DataTools
 import polars as pl
 
 input_file = "./samples/data/fwf.txt"
 
 dtools = DataTools.get_python_connector()
 filesystem = dtools.get_filesystem()
+
 lz = filesystem.get_file_to_lf(input_file, 'text')
 
-lz = lz.with_columns(
-    pl.col("value").str.slice(0, 20).alias("col1").str.strip_chars(),
-    pl.col("value").str.slice(20, 20).alias("col2").str.strip_chars(),
-    pl.col("value").str.slice(40, 7).alias("col3").str.strip_chars(),
-)
+layout = [
+    (0, 20),
+    (20, 20),
+    (40, 7),
+]
+
+for index, (start, length) in enumerate(layout):
+    lz = lz.with_columns(
+        pl.col("value")
+        .str.slice(start, length)
+        .str.strip_chars()
+        .alias("col" + str(index))
+    )
 
 lz = lz.drop("value")
 df = lz.collect()
