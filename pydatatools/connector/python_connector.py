@@ -8,12 +8,13 @@ class PythonConnector(Connector):
     It provides methods to interact with a catalog and a filesystem.
     """
 
-    def __init__(self, catalog = GlueCatalog(), filesystem = S3Filesystem()):
+    def __init__(self, catalog=GlueCatalog(), filesystem=S3Filesystem()):
         """
         Initializes PythonConnector with a catalog and a filesystem.
 
-        :param catalog: an instance of GlueCatalog, defaults to GlueCatalog()
-        :param filesystem: an instance of S3Filesystem, defaults to S3Filesystem()
+        Args:
+            catalog: An instance of GlueCatalog, defaults to GlueCatalog().
+            filesystem: An instance of S3Filesystem, defaults to S3Filesystem().
         """
         self.catalog = catalog
         self.filesystem = filesystem
@@ -22,7 +23,8 @@ class PythonConnector(Connector):
         """
         Returns the catalog associated with this connector.
 
-        :return: an instance of GlueCatalog
+        Returns:
+            An instance of GlueCatalog.
         """
         return self.catalog
     
@@ -30,7 +32,8 @@ class PythonConnector(Connector):
         """
         Returns the filesystem associated with this connector.
 
-        :return: an instance of S3Filesystem
+        Returns:
+            An instance of S3Filesystem.
         """
         return self.filesystem
     
@@ -39,7 +42,8 @@ class PythonConnector(Connector):
         Method to get ODBC connection.
         This method is not implemented in this class and should be overridden in subclasses.
 
-        :raises NotImplementedError: always
+        Raises:
+            NotImplementedError: This method is not implemented and should be overridden in a subclass.
         """
         raise NotImplementedError()
     
@@ -48,7 +52,8 @@ class PythonConnector(Connector):
         Method to get SQL connection.
         This method is not implemented in this class and should be overridden in subclasses.
 
-        :raises NotImplementedError: always
+        Raises:
+            NotImplementedError: This method is not implemented and should be overridden in a subclass.
         """
         raise NotImplementedError()
     
@@ -57,6 +62,7 @@ class PythonConnector(Connector):
         Method to get data quality.
         This method is not implemented in this class and should be overridden in subclasses.
 
-        :raises NotImplementedError: always
+        Raises:
+            NotImplementedError: This method is not implemented and should be overridden in a subclass.
         """
         raise NotImplementedError()
