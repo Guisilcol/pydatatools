@@ -10,7 +10,7 @@ import glob
 import polars as pl
 
 from pydatatools.engine.python.catalog import GlueCatalog
-from pydatatools.interfaces.catalog import TableMetadata, ColumnMetadata, PartitionMetadata
+from pydatatools.interfaces.catalog import TableMetadataTypeDef, ColumnMetadataTypeDef, PartitionMetadataTypeDef
 
 @fixture
 def aws_env_vars(monkeypatch: MonkeyPatch):
@@ -47,7 +47,7 @@ def test_get_table_metadata_with_csv_files(catalog: GlueCatalog, aws_env_vars):
     ###################
     # EXPECTED VALUES #
     ###################
-    expected_value: TableMetadata = {
+    expected_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -94,7 +94,7 @@ def test_get_table_metadata_with_parquet_files(catalog: GlueCatalog, aws_env_var
     ###################
     # EXPECTED VALUES #
     ###################
-    expected_value: TableMetadata = {
+    expected_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -145,7 +145,7 @@ def test_get_table_metadata_with_partitions_columns(catalog: GlueCatalog, aws_en
     ###################
     # EXPECTED VALUES #
     ###################
-    expected_value: TableMetadata = {
+    expected_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -183,7 +183,7 @@ def test_get_table_to_lazyframe_using_csv_files(catalog: GlueCatalog, aws_env_va
         ######################
         # MOCK RETURN VALUES #
         ######################
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -235,7 +235,7 @@ def test_get_table_to_lazyframe_using_parquet_files(catalog: GlueCatalog, aws_en
         ######################
         # MOCK RETURN VALUES #
         ######################
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -276,7 +276,7 @@ def test_get_table_to_lazyframe_using_where_clause(catalog: GlueCatalog, aws_env
         ######################
         # MOCK RETURN VALUES #
         ######################
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -318,7 +318,7 @@ def test_get_last_partition_to_lazyframe(catalog: GlueCatalog, aws_env_vars):
         ######################
         # MOCK RETURN VALUES #
         ######################
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -339,7 +339,7 @@ def test_get_last_partition_to_lazyframe(catalog: GlueCatalog, aws_env_vars):
             'raw': {}
         }
         
-        get_last_partition_return_value: PartitionMetadata = {
+        get_last_partition_return_value: PartitionMetadataTypeDef = {
             'values': ['partition1'],
             'location': temp_dir,
             'creation_time': datetime(2021, 1, 1),
@@ -366,7 +366,7 @@ def test_get_columns_table(catalog: GlueCatalog):
     ######################
     # MOCK RETURN VALUES #
     ######################
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -387,7 +387,7 @@ def test_get_columns_table(catalog: GlueCatalog):
     ###################
     # EXPECTED VALUES #
     ###################
-    expected_value: List[ColumnMetadata] = [
+    expected_value: List[ColumnMetadataTypeDef] = [
         {'name': 'col1', 'type': 'string', 'is_partition_key': False},
         {'name': 'col2', 'type': 'int', 'is_partition_key': False},
     ]
@@ -431,7 +431,7 @@ def test_get_all_partitions(catalog: GlueCatalog):
     # EXPECTED VALUES #
     ###################
     
-    expected_value: List[PartitionMetadata] = [
+    expected_value: List[PartitionMetadataTypeDef] = [
         {
             'values': ['2021-01-01'],
             'location': 's3://bucket/prefix/2021-01-01',
@@ -456,7 +456,7 @@ def test_get_partitioned_columns(catalog: GlueCatalog):
     ######################
     # MOCK RETURN VALUES #
     ######################
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -482,7 +482,7 @@ def test_get_partitioned_columns(catalog: GlueCatalog):
     ###################
     # EXPECTED VALUES #
     ###################
-    expected_value: List[ColumnMetadata] = [
+    expected_value: List[ColumnMetadataTypeDef] = [
         {'name': 'partition_col1', 'type': 'string', 'is_partition_key': True},
         {'name': 'partition_col2', 'type': 'int', 'is_partition_key': True},
     ]
@@ -500,7 +500,7 @@ def test_get_last_partition_sorting_by_alphanumeric_and_1_level_partition(catalo
     # MOCK RETURN VALUES #
     ######################
     
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -547,7 +547,7 @@ def test_get_last_partition_sorting_by_alphanumeric_and_1_level_partition(catalo
     # EXPECTED VALUES #
     ###################
     
-    expected_value: PartitionMetadata = {
+    expected_value: PartitionMetadataTypeDef = {
         'values': ['B'],
         'location': 's3://bucket/prefix/partition_col1=B',
         'creation_time': datetime(2021, 1, 2),
@@ -567,7 +567,7 @@ def test_get_last_partition_sorting_by_alphanumeric_and_2_levels_partition(catal
     # MOCK RETURN VALUES #
     ######################
     
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -616,7 +616,7 @@ def test_get_last_partition_sorting_by_alphanumeric_and_2_levels_partition(catal
     # EXPECTED VALUES #
     ###################
     
-    expected_value: PartitionMetadata = {
+    expected_value: PartitionMetadataTypeDef = {
         'values': ['A', 2],
         'location': 's3://bucket/prefix/partition_col1=B/partition_col2=2',
         'creation_time': datetime(2021, 1, 2),
@@ -636,7 +636,7 @@ def test_get_last_partition_sorting_by_createtime_and_1_level_partition(catalog:
     # MOCK RETURN VALUES #
     ######################
     
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -683,7 +683,7 @@ def test_get_last_partition_sorting_by_createtime_and_1_level_partition(catalog:
     # EXPECTED VALUES #
     ###################
     
-    expected_value: PartitionMetadata = {
+    expected_value: PartitionMetadataTypeDef = {
         'values': ['A'],
         'location': 's3://bucket/prefix/partition_col1=A',
         'creation_time': datetime(2021, 1, 2),
@@ -703,7 +703,7 @@ def test_get_last_partition_sorting_by_createtime_and_2_levels_partition(catalog
     # MOCK RETURN VALUES #
     ######################
     
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -752,7 +752,7 @@ def test_get_last_partition_sorting_by_createtime_and_2_levels_partition(catalog
     # EXPECTED VALUES #
     ###################
     
-    expected_value: PartitionMetadata = {
+    expected_value: PartitionMetadataTypeDef = {
         'values': ['A', 1],
         'location': 's3://bucket/prefix/partition_col1=A/partition_col2=1',
         'creation_time': datetime(2021, 1, 2),
@@ -772,7 +772,7 @@ def test_get_last_partition_when_table_not_have_partition_column(catalog: GlueCa
     # MOCK RETURN VALUES #
     ######################
     
-    get_table_metadata_return_value: TableMetadata = {
+    get_table_metadata_return_value: TableMetadataTypeDef = {
         'columns': [
             {'name': 'col1', 'type': 'string', 'is_partition_key': False},
             {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -813,7 +813,7 @@ def test_get_partition_count(catalog: GlueCatalog):
     # MOCK RETURN VALUES #
     ######################
     
-    get_all_partitions_return_value: List[PartitionMetadata] = ['partition1', 'partition2']
+    get_all_partitions_return_value: List[PartitionMetadataTypeDef] = ['partition1', 'partition2']
     
     ###################
     # EXPECTED VALUES #
@@ -863,7 +863,7 @@ def test_check_empty_partition_when_have_files(catalog: GlueCatalog):
     # MOCK RETURN VALUES #
     ######################
     
-    get_partition_metadata_return_value: PartitionMetadata = {
+    get_partition_metadata_return_value: PartitionMetadataTypeDef = {
         'location': 's3://bucket/prefix/partition1'
     }
     
@@ -880,7 +880,7 @@ def test_check_empty_partition_when_have_files(catalog: GlueCatalog):
     ###################################
     
     with patch.object(catalog, '_get_partition_metadata', return_value=get_partition_metadata_return_value), \
-         patch.object(catalog, '_get_s3_files', return_value=get_s3_files_return_value):
+         patch.object(catalog, '_get_all_s3_keys_from_prefix', return_value=get_s3_files_return_value):
         result = catalog.check_empty_partition('db', 'table', 'partition1')
         assert result == expected_value, 'Empty partition check is not as expected'
         
@@ -889,7 +889,7 @@ def test_check_empty_partition_when_not_have_files(catalog: GlueCatalog):
     # MOCK RETURN VALUES #
     ######################
     
-    get_partition_metadata_return_value: PartitionMetadata = {
+    get_partition_metadata_return_value: PartitionMetadataTypeDef = {
         'location': 's3://bucket/prefix/partition1'
     }
     
@@ -906,7 +906,7 @@ def test_check_empty_partition_when_not_have_files(catalog: GlueCatalog):
     ###################################
     
     with patch.object(catalog, '_get_partition_metadata', return_value=get_partition_metadata_return_value), \
-         patch.object(catalog, '_get_s3_files', return_value=get_s3_files_return_value):
+         patch.object(catalog, '_get_all_s3_keys_from_prefix', return_value=get_s3_files_return_value):
         result = catalog.check_empty_partition('db', 'table', 'partition1')
         assert result == expected_value, 'Empty partition check is not as expected'
        
@@ -923,8 +923,8 @@ def test_get_partitions_files(catalog: GlueCatalog):
         }
     }
     
-    _get_s3_files_mock = MagicMock()
-    _get_s3_files_mock.return_value = ['prefix/partition1/file1', 'prefix/partition1/file2']
+    _get_all_s3_keys_from_prefix_mock = MagicMock()
+    _get_all_s3_keys_from_prefix_mock.return_value = ['prefix/partition1/file1', 'prefix/partition1/file2']
     
 
     ###################
@@ -942,7 +942,7 @@ def test_get_partitions_files(catalog: GlueCatalog):
     
     catalog.glue_cli.get_partition.return_value = glue_cli_get_partition_return_value
     
-    with patch.object(catalog, '_get_s3_files', _get_s3_files_mock):
+    with patch.object(catalog, '_get_all_s3_keys_from_prefix', _get_all_s3_keys_from_prefix_mock):
         result = catalog.get_partition_files('db', 'table', 'partition1')
         assert result == expected_value, 'Partitions files are not as expected'
 
@@ -982,7 +982,7 @@ def test_put_frame_to_table_when_lazyframe_and_not_have_partitioned_columns_and_
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1039,7 +1039,7 @@ def test_put_frame_to_table_when_lazyframe_and_have_partitioned_columns_and_uses
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1102,7 +1102,7 @@ def test_put_frame_to_table_when_lazyframe_and_not_have_partitioned_columns_and_
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1159,7 +1159,7 @@ def test_put_frame_to_table_when_lazyframe_and_have_partitioned_columns_and_uses
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1222,7 +1222,7 @@ def test_put_frame_to_table_when_dataframe_and_not_have_partitioned_columns_and_
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1279,7 +1279,7 @@ def test_put_frame_to_table_when_dataframe_and_have_partitioned_columns_and_uses
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1342,7 +1342,7 @@ def test_put_frame_to_table_when_dataframe_and_not_have_partitioned_columns_and_
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1399,7 +1399,7 @@ def test_put_frame_to_table_when_dataframe_and_have_partitioned_columns_and_uses
         # MOCK RETURN VALUES #
         ######################
         
-        get_table_metadata_return_value: TableMetadata = {
+        get_table_metadata_return_value: TableMetadataTypeDef = {
             'columns': [
                 {'name': 'col1', 'type': 'string', 'is_partition_key': False},
                 {'name': 'col2', 'type': 'int', 'is_partition_key': False},
@@ -1554,7 +1554,7 @@ def test_check_table_schema_when_frame_not_match(catalog: GlueCatalog):
     
 def test_get_location(catalog: GlueCatalog):
     get_table_metadata_mock = MagicMock()
-    get_table_metadata_mock.return_value = TableMetadata({
+    get_table_metadata_mock.return_value = TableMetadataTypeDef({
         'location': 's3://bucket/prefix/',
     })
     
@@ -1564,11 +1564,11 @@ def test_get_location(catalog: GlueCatalog):
 def test_update_partitions(catalog: GlueCatalog):
     get_table_metadata_mock = MagicMock()
     get_all_partitions_mock = MagicMock()
-    _get_s3_files_mock = MagicMock()
+    _get_all_s3_keys_from_prefix_mock = MagicMock()
     catalog.glue_cli.create_partition = MagicMock()
     catalog.glue_cli.batch_delete_partition = MagicMock()
     
-    get_table_metadata_mock.return_value = TableMetadata({
+    get_table_metadata_mock.return_value = TableMetadataTypeDef({
         'columns': [
             {'name': 'col1', 'type': 'tinyint', 'is_partition_key': False},
             {'name': 'col2', 'type': 'smallint', 'is_partition_key': False},
@@ -1594,12 +1594,12 @@ def test_update_partitions(catalog: GlueCatalog):
     })
     
     get_all_partitions_mock.return_value = [
-        PartitionMetadata({'values': ['A', 1], 'location': 's3://bucket/prefix/partition_col1=A/partition_col2=1'}),
-        PartitionMetadata({'values': ['B', 2], 'location': 's3://bucket/prefix/partition_col1=B/partition_col2=2'}),
-        PartitionMetadata({'values': ['C', 3], 'location': 's3://bucket/prefix/partition_col1=C/partition_col2=3'}),
+        PartitionMetadataTypeDef({'values': ['A', 1], 'location': 's3://bucket/prefix/partition_col1=A/partition_col2=1'}),
+        PartitionMetadataTypeDef({'values': ['B', 2], 'location': 's3://bucket/prefix/partition_col1=B/partition_col2=2'}),
+        PartitionMetadataTypeDef({'values': ['C', 3], 'location': 's3://bucket/prefix/partition_col1=C/partition_col2=3'}),
     ]
     
-    _get_s3_files_mock.return_value = [
+    _get_all_s3_keys_from_prefix_mock.return_value = [
         'prefix/partition_col1=A/partition_col2=1/file1', 
         'prefix/partition_col1=B/partition_col2=2/file2'
     ]
@@ -1607,6 +1607,6 @@ def test_update_partitions(catalog: GlueCatalog):
     
     with patch.object(catalog, 'get_table_metadata', get_table_metadata_mock), \
          patch.object(catalog, 'get_all_partitions', get_all_partitions_mock), \
-         patch.object(catalog, '_get_s3_files', _get_s3_files_mock):
+         patch.object(catalog, '_get_all_s3_keys_from_prefix', _get_all_s3_keys_from_prefix_mock):
         
         catalog.update_partitions('db', 'table')

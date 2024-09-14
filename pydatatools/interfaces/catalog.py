@@ -3,25 +3,25 @@ from typing import List, Optional, Union, Tuple, TypedDict, Literal
 from abc import ABC, abstractmethod
 import polars as pl
 
-class ColumnMetadata(TypedDict):
+class ColumnMetadataTypeDef(TypedDict):
     """A dictionary type for metadata of a column."""
     name: str
     type: str
     is_partition_key: bool
 
-class TableMetadata(TypedDict):
+class TableMetadataTypeDef(TypedDict):
     """A dictionary type for metadata of a table."""
     database: str
     table: str 
     location: str
-    columns: List[ColumnMetadata]
-    partitioned_columns: List[ColumnMetadata]
-    all_columns: List[ColumnMetadata]
+    columns: List[ColumnMetadataTypeDef]
+    partitioned_columns: List[ColumnMetadataTypeDef]
+    all_columns: List[ColumnMetadataTypeDef]
     file_extension: str
     delimiter: Optional[str]
     raw: dict
 
-class PartitionMetadata(TypedDict):
+class PartitionMetadataTypeDef(TypedDict):
     """A dictionary type for metadata of a partition."""
     values: List[str]
     location: str
@@ -30,13 +30,8 @@ class PartitionMetadata(TypedDict):
 class CatalogIntegratedWithPolars(ABC):
     """An abstract base class for Catalog operations."""
     
-    def __init__(self):
-        """Initialize CatalogIntegratedWithPolarsand prevent instantiation of the abstract class."""
-        if type(self) is CatalogIntegratedWithPolars:
-            raise TypeError("CatalogIntegratedWithPolarsis an abstract class and cannot be instantiated directly")
-
     @abstractmethod
-    def get_table_metadata(self, database: str, table: str) -> TableMetadata:
+    def get_table_metadata(self, database: str, table: str) -> TableMetadataTypeDef:
         """Retrieve metadata for a specific table."""
         raise NotImplementedError("This method must be implemented by a subclass")
 
@@ -56,17 +51,17 @@ class CatalogIntegratedWithPolars(ABC):
         raise NotImplementedError("This method must be implemented by a subclass")
 
     @abstractmethod
-    def get_all_partitions(self, database: str, table: str) -> List[PartitionMetadata]:
+    def get_all_partitions(self, database: str, table: str) -> List[PartitionMetadataTypeDef]:
         """Get all partitions of a table."""
         raise NotImplementedError("This method must be implemented by a subclass")
 
     @abstractmethod
-    def get_partitioned_columns(self, database: str, table: str) -> List[ColumnMetadata]:
+    def get_partitioned_columns(self, database: str, table: str) -> List[ColumnMetadataTypeDef]:
         """Get partitioned columns of a table."""
         raise NotImplementedError("This method must be implemented by a subclass")
 
     @abstractmethod
-    def get_last_partition(self, database: str, table: str, sort_by: Literal['alphanumeric', 'createtime']) -> Optional[PartitionMetadata]:
+    def get_last_partition(self, database: str, table: str, sort_by: Literal['alphanumeric', 'createtime']) -> Optional[PartitionMetadataTypeDef]:
         """Get the last partition of a table."""
         raise NotImplementedError("This method must be implemented by a subclass")
 
